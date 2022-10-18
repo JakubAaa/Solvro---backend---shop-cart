@@ -1,5 +1,5 @@
 import {Cart} from "../../src/cart/cart.interfaces";
-import {DEFAULT_USER_ID} from "../../src/auth/auth.request.interface";
+import {DEFAULT_USER_ID} from "../../src/auth/auth.request";
 import {product1, product2} from "./insert.product";
 import {CartRepository} from "../../src/repository/cart.repository";
 

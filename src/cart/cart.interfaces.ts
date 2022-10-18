@@ -2,7 +2,8 @@ export interface Cart {
     cartId: string,
     userId: string,
     products: ProductInCart[],
-    totalValue: number
+    totalValue: number,
+    discountCode?: number
 }
 
 export interface ProductBody {

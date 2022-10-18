@@ -2,7 +2,7 @@ import * as bodyParser from "body-parser";
 import express from "express"
 import {errorHandler} from "../../src/error/error.handler";
 import {Controller} from "../../src/utils/controller";
-import {authenticateUser} from "../../src/auth/auth.request.interface";
+import {authenticateUser} from "../../src/auth/auth.request";
 
 require('express-async-errors');
 

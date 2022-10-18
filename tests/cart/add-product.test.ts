@@ -18,7 +18,6 @@ describe(`POST ${CART_PATH}`, () => {
     })
 
     afterAll(async () => {
-        await Mongo.cart().drop()
         await Mongo.close()
     })
 
