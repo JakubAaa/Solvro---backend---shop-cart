@@ -1,6 +1,5 @@
 import {CartRepository} from "../repository/cart.repository";
 import {ProductBody, ProductInCart} from "./cart.interfaces";
-import {AuthUser} from "../auth/auth.request";
 
 export class CartService {
     getCart = async (userId: string) => {
@@ -8,14 +7,18 @@ export class CartService {
         return this.mapCart(cart);
     }
 
-    addProduct = async (user: AuthUser, product: ProductBody) => {
+    addProduct = async (userId: string, product: ProductBody) => {
         const productToCart: ProductInCart = {
             productId: product.productId,
             quantity: product.quantity
         }
         const totalPrice = product.price * product.quantity
+        await CartRepository.addProduct(userId, productToCart, totalPrice)
+    }
 
-        await CartRepository.addProduct(user.id, productToCart, totalPrice)
+    deleteProduct = async (userId: string, body: ProductBody) => {
+        const valueToDecrement = body.price * body.quantity
+        await CartRepository.deleteProduct(userId, body.productId, valueToDecrement)
     }
 
     mapCart = cart => {

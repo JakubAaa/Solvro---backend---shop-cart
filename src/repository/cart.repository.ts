@@ -13,4 +13,7 @@ export class CartRepository {
 
     public static addProduct = (userId: string, product: ProductInCart, price: number) =>
         Mongo.cart().updateOne({userId}, {$push: {products: product}, $inc: {totalValue: price}})
+
+    public static deleteProduct = (userId: string, productId: string, valueToDecrement: number) =>
+        Mongo.cart().updateOne({userId}, {$pull: {products: {productId}}, $inc: {totalValue: -valueToDecrement}})
 }

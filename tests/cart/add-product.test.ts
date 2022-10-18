@@ -4,7 +4,7 @@ import {appConfig} from "../../src/utils/config";
 import supertest from "supertest"
 import {appMock} from "../mocks/app.mock";
 import {cartController} from "../tests.utils/controllers";
-import {product1, product2, productBody1, productBody2} from "../tests.utils/insert.product";
+import {productInCart1, productInCart2, productBody1, productBody2} from "../tests.utils/insert.product";
 import {cart1, emptyCart, insertOne} from "../tests.utils/insert.cart";
 import {CartRepository} from "../../src/repository/cart.repository";
 
@@ -32,7 +32,7 @@ describe(`POST ${CART_PATH}`, () => {
 
         expect(addProductResponse.status).toBe(201)
 
-        expect(cart!.products).toStrictEqual([product1]);
+        expect(cart!.products).toStrictEqual([productInCart1]);
         expect(cart!.totalValue).toBe(productBody1.price * productBody1.quantity)
     })
 
@@ -47,7 +47,7 @@ describe(`POST ${CART_PATH}`, () => {
 
         expect(addProductResponse.status).toBe(201)
 
-        expect(cart!.products).toStrictEqual([...cart1.products, product2]);
+        expect(cart!.products).toStrictEqual([...cart1.products, productInCart2]);
         expect(cart!.totalValue).toBe(cart1.totalValue + (productBody2.price * productBody2.quantity))
     })
 })

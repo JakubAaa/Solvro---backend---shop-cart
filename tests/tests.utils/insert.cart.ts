@@ -1,6 +1,6 @@
 import {Cart} from "../../src/cart/cart.interfaces";
 import {DEFAULT_USER_ID} from "../../src/auth/auth.request";
-import {product1, product2} from "./insert.product";
+import {productInCart1, productInCart2} from "./insert.product";
 import {CartRepository} from "../../src/repository/cart.repository";
 
 export const cartIds = {
@@ -10,8 +10,8 @@ export const cartIds = {
 }
 
 export const productsInCart = {
-    products1: [product1, product2],
-    products2: [product1],
+    products1: [productInCart1, productInCart2],
+    products2: [productInCart1],
     products3: []
 }
 

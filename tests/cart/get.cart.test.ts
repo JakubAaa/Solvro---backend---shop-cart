@@ -18,16 +18,16 @@ describe(`GET ${CART_PATH}`, () => {
     })
 
     it('should return a cart', async () => {
-        const addProductResponse = await supertest(appMock(cartController))
+        const getCartResponse = await supertest(appMock(cartController))
             .get(CART_PATH)
             .send()
 
-        expect(addProductResponse.status).toBe(200)
+        expect(getCartResponse.status).toBe(200)
 
-        expect(addProductResponse.body).not.toHaveProperty('cartId');
-        expect(addProductResponse.body).not.toHaveProperty('userId');
+        expect(getCartResponse.body).not.toHaveProperty('cartId');
+        expect(getCartResponse.body).not.toHaveProperty('userId');
 
-        expect(addProductResponse.body.products).toStrictEqual(cart1.products);
-        expect(addProductResponse.body.totalValue).toBe(cart1.totalValue);
+        expect(getCartResponse.body.products).toStrictEqual(cart1.products);
+        expect(getCartResponse.body.totalValue).toBe(cart1.totalValue);
     })
 })

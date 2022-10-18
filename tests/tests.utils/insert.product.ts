@@ -20,24 +20,24 @@ export const productQuantities = {
     quantity2: 14
 }
 
-export const product1: ProductInCart = {
+export const productInCart1: ProductInCart = {
     productId: productIds.id1,
     quantity: productQuantities.quantity1
 }
 
-export const product2: ProductInCart = {
+export const productInCart2: ProductInCart = {
     productId: productIds.id2,
     quantity: productQuantities.quantity2
 }
 
 export const productBody1: ProductBody = {
-    productId: product1.productId,
+    productId: productInCart1.productId,
     quantity: productQuantities.quantity1,
     price: productPrices.price1
 }
 
 export const productBody2: ProductBody = {
-    productId: product2.productId,
+    productId: productInCart2.productId,
     quantity: productQuantities.quantity2,
     price: productPrices.price2
 }
