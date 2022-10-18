@@ -1,12 +1,16 @@
-import {Request} from "express";
+import {NextFunction, Request, Response} from "express";
+
+export const DEFAULT_USER_ID = '1';
 
 export interface AuthRequest extends Request {
-    user: AuthUser,
-    page: number
+    user: AuthUser
 }
 
 export interface AuthUser {
-    id: string,
-    name: string,
-    cartId: string
+    id: string
+}
+
+export const authenticateUser = (req: AuthRequest, res: Response, next: NextFunction) =>{  //middleware just for demo use
+    req.user = {id: DEFAULT_USER_ID};
+    next();
 }

@@ -1,9 +1,15 @@
 import {CartRepository} from "../repository/cart.repository";
-import {ProductInCart} from "./cart.interfaces";
+import {ProductBody, ProductInCart} from "./cart.interfaces";
 import {AuthUser} from "../auth/auth.request.interface";
 
 export class CartService {
-    addProduct = async (user: AuthUser, product: ProductInCart) => {
-        await CartRepository.addProduct(user.cartId, product)
+    addProduct = async (user: AuthUser, product: ProductBody) => {
+        const productToCart: ProductInCart = {
+            productId: product.productId,
+            quantity: product.quantity
+        }
+        const totalPrice = product.price * product.quantity
+
+        await CartRepository.addProduct(user.id, productToCart, totalPrice)
     }
 }
