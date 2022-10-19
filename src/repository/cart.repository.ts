@@ -22,4 +22,7 @@ export class CartRepository {
 
     public static changeShipping = (userId: string, shippingMethod: ShippingMethod) =>
         Mongo.cart().updateOne({userId}, {$set: {shippingMethod}})
+
+    public static setDiscountCode = (userId: string, code: string) =>
+        Mongo.cart().updateOne({userId}, {$set: {discountCode: code}})
 }

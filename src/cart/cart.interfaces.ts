@@ -2,7 +2,7 @@ export interface Cart {
     cartId: string,
     userId: string,
     products: Product[]
-    discountCode?: DiscountCode,
+    discountCode?: string,
     shippingMethod: ShippingMethod
 }
 
@@ -10,11 +10,6 @@ export interface Product {
     productId: string,
     quantity: number,
     price: number
-}
-
-interface DiscountCode {
-    type: DiscountCodeType,
-    value: number
 }
 
 enum DiscountCodeType {
@@ -37,4 +32,8 @@ export interface QuantityBody {
 
 export interface ShippingBody {
     shippingMethod: ShippingMethod
+}
+
+export interface DiscountCodeBody {
+    code: string
 }

@@ -1,10 +1,10 @@
 import {CartRepository} from "../repository/cart.repository";
-import {Product, QuantityBody, ShippingBody} from "./cart.interfaces";
+import {DiscountCodeBody, Product, QuantityBody, ShippingBody} from "./cart.interfaces";
+import codes from '../resource.i18n/discountCodes.json'
 
 export class CartService {
     getCart = async (userId: string) =>
         CartRepository.findUserCart(userId).then(cart => this.mapCart(cart))
-
 
     addProduct = async (userId: string, product: Product) => {
         await CartRepository.addProduct(userId, product)
@@ -22,8 +22,13 @@ export class CartService {
         await CartRepository.changeShipping(userId, body.shippingMethod)
     }
 
+    setDiscountCode = async (userId: string, body: DiscountCodeBody) => {
+        if (codes.filter(code => code.code === body.code).length > 0)
+            await CartRepository.setDiscountCode(userId, body.code)
+    }
+
     mapCart = cart => (
-         {
+        {
             products: cart.products,
             totalValue: cart.totalValue
         }

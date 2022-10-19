@@ -1,4 +1,4 @@
-import {Cart, ShippingBody, ShippingMethod} from "../../src/cart/cart.interfaces";
+import {Cart, DiscountCodeBody, ShippingBody, ShippingMethod} from "../../src/cart/cart.interfaces";
 import {DEFAULT_USER_ID} from "../../src/auth/auth.request";
 import {product1, product2} from "./insert.product";
 import {CartRepository} from "../../src/repository/cart.repository";
@@ -38,6 +38,10 @@ export const emptyCart: Cart = {
 
 export const newShippingBody1: ShippingBody = {
     shippingMethod: ShippingMethod.PARCEL_LOCKER
+}
+
+export const discountCodeBody1: DiscountCodeBody = {
+    code: 'code10'
 }
 
 export const insertOne = (cart: Cart) =>

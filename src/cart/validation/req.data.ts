@@ -14,3 +14,7 @@ export const quantityBodySchema = yup.object().shape({
 export const shippingBodySchema = yup.object().shape({
     shippingMethod: yup.mixed<ShippingMethod>().required()
 })
+
+export const discountCodeBodySchema = yup.object().shape({
+    code: yup.string().required()
+})

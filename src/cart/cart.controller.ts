@@ -2,14 +2,15 @@ import {Controller} from "../utils/controller";
 import {Response, Router} from "express";
 import {CartService} from "./cart.service";
 import {AuthRequest} from "../auth/auth.request";
-import {Product, QuantityBody, ShippingBody} from "./cart.interfaces";
-import {productSchema, quantityBodySchema, shippingBodySchema} from "./validation/req.data";
+import {DiscountCodeBody, Product, QuantityBody, ShippingBody} from "./cart.interfaces";
+import {discountCodeBodySchema, productSchema, quantityBodySchema, shippingBodySchema} from "./validation/req.data";
 import {validate} from "../utils/validator";
 
 export const CART_PATH = "/cart";
 export const PRODUCT_PATH = "/product";
 export const QUANTITY_PATH = "/quantity";
 export const SHIPPING_PATH = "/shipping";
+export const DISCOUNT_CODE_PATH = "/shipping";
 
 export class CartController implements Controller {
     router = Router();
@@ -29,6 +30,9 @@ export class CartController implements Controller {
 
         this.router.put(`${CART_PATH}${SHIPPING_PATH}`, validate(shippingBodySchema), (req: AuthRequest, res: Response) =>
             this.changeShipping(req.user.id, req.body).then(() => res.sendStatus(200)))
+
+        this.router.post(`${CART_PATH}${DISCOUNT_CODE_PATH}`, validate(discountCodeBodySchema), (req: AuthRequest, res: Response) =>
+            this.setDiscountCode(req.user.id, req.body).then(() => res.sendStatus(200)))
     }
 
     getCart(userId: string) {
@@ -49,5 +53,9 @@ export class CartController implements Controller {
 
     changeShipping(userId: string, body: ShippingBody) {
         return this.cartService.changeShipping(userId, body);
+    }
+
+    setDiscountCode(userId: string, body: DiscountCodeBody) {
+        return this.cartService.setDiscountCode(userId, body);
     }
 }

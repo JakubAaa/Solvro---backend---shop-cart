@@ -1,0 +1,32 @@
+[
+  {
+    "code": "code10",
+    "type": "PERCENT",
+    "value": "10"
+  },
+  {
+    "code": "code20",
+    "type": "PERCENT",
+    "value": "20"
+  },
+  {
+    "code": "code30",
+    "type": "PERCENT",
+    "value": "30"
+  },
+  {
+    "code": "code50",
+    "type": "AMOUNT",
+    "value": "50"
+  },
+  {
+    "code": "code100",
+    "type": "AMOUNT",
+    "value": "100"
+  },
+  {
+    "code": "code1000",
+    "type": "AMOUNT",
+    "value": "1000"
+  }
+]
