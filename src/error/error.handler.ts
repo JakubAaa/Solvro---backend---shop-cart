@@ -23,7 +23,7 @@ export const errorHandler: ErrorHandler = (
 ) => {
     const status = (error as AppError)?.status || 500;
 
-    const response = (status != 500) ?{
+    const response = (status != 500) ? {
         code: (error as AppError).code,
         data: (error as AppError).data
     } : internalServerError;

@@ -10,7 +10,7 @@ export interface AuthUser {
     id: string
 }
 
-export const authenticateUser = (req: AuthRequest, res: Response, next: NextFunction) =>{  //middleware just for demo use
+export const authenticateDemoUser = (req: AuthRequest, res: Response, next: NextFunction) =>{
     req.user = {id: DEFAULT_USER_ID};
     next();
 }

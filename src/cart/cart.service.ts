@@ -1,30 +1,27 @@
 import {CartRepository} from "../repository/cart.repository";
-import {ProductBody, ProductInCart} from "./cart.interfaces";
+import {Product, QuantityBody} from "./cart.interfaces";
 
 export class CartService {
-    getCart = async (userId: string) => {
-        const cart = await CartRepository.findUserCart(userId)
-        return this.mapCart(cart);
+    getCart = async (userId: string) =>
+        CartRepository.findUserCart(userId).then(cart => this.mapCart(cart))
+
+
+    addProduct = async (userId: string, product: Product) => {
+        await CartRepository.addProduct(userId, product)
     }
 
-    addProduct = async (userId: string, product: ProductBody) => {
-        const productToCart: ProductInCart = {
-            productId: product.productId,
-            quantity: product.quantity
-        }
-        const totalPrice = product.price * product.quantity
-        await CartRepository.addProduct(userId, productToCart, totalPrice)
+    deleteProduct = async (userId: string, productId: string) => {
+        await CartRepository.deleteProduct(userId, productId)
     }
 
-    deleteProduct = async (userId: string, body: ProductBody) => {
-        const valueToDecrement = body.price * body.quantity
-        await CartRepository.deleteProduct(userId, body.productId, valueToDecrement)
+    changeQuantity = async (userId: string, productId: string, body: QuantityBody) => {
+        await CartRepository.changeQuantity(userId, productId, body.newQuantity)
     }
 
-    mapCart = cart => {
-        return {
+    mapCart = cart => (
+         {
             products: cart.products,
             totalValue: cart.totalValue
         }
-    }
+    )
 }

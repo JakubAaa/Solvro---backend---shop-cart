@@ -1,18 +1,16 @@
 export interface Cart {
     cartId: string,
     userId: string,
-    products: ProductInCart[],
-    totalValue: number,
+    products: Product[]
     discountCode?: number
 }
 
-export interface ProductBody {
+export interface Product {
     productId: string,
     quantity: number,
     price: number
 }
 
-export interface ProductInCart {
-    productId: string,
-    quantity: number
+export interface QuantityBody {
+    newQuantity: number
 }

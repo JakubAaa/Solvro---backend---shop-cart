@@ -2,43 +2,44 @@ import {Controller} from "../utils/controller";
 import {Response, Router} from "express";
 import {CartService} from "./cart.service";
 import {AuthRequest} from "../auth/auth.request";
-import {ProductBody} from "./cart.interfaces";
-import {productBodySchema} from "./validation/req.data";
+import {Product, QuantityBody} from "./cart.interfaces";
+import {productSchema, quantityBodySchema} from "./validation/req.data";
 import {validate} from "../utils/validator";
 
 export const CART_PATH = "/cart";
+export const PRODUCT_PATH = "/product";
+export const QUANTITY_PATH = "/quantity";
 
 export class CartController implements Controller {
     router = Router();
 
     constructor(private cartService: CartService) {
-        this.router.get(CART_PATH, (req: AuthRequest, res: Response) =>
+        this.router.get(`${CART_PATH}${PRODUCT_PATH}`, (req: AuthRequest, res: Response) =>
             this.getCart(req.user.id).then(cart => res.status(200).json(cart)))
 
-        this.router.post(CART_PATH, validate(productBodySchema), (req: AuthRequest, res: Response) =>
+        this.router.post(`${CART_PATH}${PRODUCT_PATH}`, validate(productSchema), (req: AuthRequest, res: Response) =>
             this.addProduct(req.user.id, req.body).then(() => res.sendStatus(201)))
 
-        this.router.post(`${CART_PATH}/delete-product`, validate(productBodySchema), (req: AuthRequest, res: Response) =>
-            this.deleteProduct(req.user.id, req.body).then(() => res.sendStatus(200)))
+        this.router.delete(`${CART_PATH}${PRODUCT_PATH}/:productId`, (req: AuthRequest, res: Response) =>
+            this.deleteProduct(req.user.id, req.params.productId).then(() => res.sendStatus(200)))
+
+        this.router.put(`${CART_PATH}${PRODUCT_PATH}/:productId${QUANTITY_PATH}`, validate(quantityBodySchema), (req: AuthRequest, res: Response) =>
+            this.changeQuantity(req.user.id, req.params.productId, req.body).then(() => res.sendStatus(200)))
     }
 
-    getCart(
-        userId: string
-    ) {
+    getCart(userId: string) {
         return this.cartService.getCart(userId);
     }
 
-    addProduct(
-        userId: string,
-        body: ProductBody
-    ) {
-        return this.cartService.addProduct(userId, body);
+    addProduct(userId: string, product: Product) {
+        return this.cartService.addProduct(userId, product);
     }
 
-    deleteProduct(
-        userId: string,
-        body: ProductBody
-    ) {
-        return this.cartService.deleteProduct(userId, body);
+    deleteProduct(userId: string, productId: string) {
+        return this.cartService.deleteProduct(userId, productId);
+    }
+
+    changeQuantity(userId: string, productId: string, body: QuantityBody) {
+        return this.cartService.changeQuantity(userId, productId, body);
     }
 }
