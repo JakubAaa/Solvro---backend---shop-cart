@@ -2,13 +2,14 @@ import {Controller} from "../utils/controller";
 import {Response, Router} from "express";
 import {CartService} from "./cart.service";
 import {AuthRequest} from "../auth/auth.request";
-import {Product, QuantityBody} from "./cart.interfaces";
-import {productSchema, quantityBodySchema} from "./validation/req.data";
+import {Product, QuantityBody, ShippingBody} from "./cart.interfaces";
+import {productSchema, quantityBodySchema, shippingBodySchema} from "./validation/req.data";
 import {validate} from "../utils/validator";
 
 export const CART_PATH = "/cart";
 export const PRODUCT_PATH = "/product";
 export const QUANTITY_PATH = "/quantity";
+export const SHIPPING_PATH = "/shipping";
 
 export class CartController implements Controller {
     router = Router();
@@ -25,6 +26,9 @@ export class CartController implements Controller {
 
         this.router.put(`${CART_PATH}${PRODUCT_PATH}/:productId${QUANTITY_PATH}`, validate(quantityBodySchema), (req: AuthRequest, res: Response) =>
             this.changeQuantity(req.user.id, req.params.productId, req.body).then(() => res.sendStatus(200)))
+
+        this.router.put(`${CART_PATH}${SHIPPING_PATH}`, validate(shippingBodySchema), (req: AuthRequest, res: Response) =>
+            this.changeShipping(req.user.id, req.body).then(() => res.sendStatus(200)))
     }
 
     getCart(userId: string) {
@@ -41,5 +45,9 @@ export class CartController implements Controller {
 
     changeQuantity(userId: string, productId: string, body: QuantityBody) {
         return this.cartService.changeQuantity(userId, productId, body);
+    }
+
+    changeShipping(userId: string, body: ShippingBody) {
+        return this.cartService.changeShipping(userId, body);
     }
 }

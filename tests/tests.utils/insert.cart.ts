@@ -1,4 +1,4 @@
-import {Cart} from "../../src/cart/cart.interfaces";
+import {Cart, ShippingBody, ShippingMethod} from "../../src/cart/cart.interfaces";
 import {DEFAULT_USER_ID} from "../../src/auth/auth.request";
 import {product1, product2} from "./insert.product";
 import {CartRepository} from "../../src/repository/cart.repository";
@@ -18,19 +18,26 @@ export const productsInCart = {
 export const cart1: Cart = {
     cartId: cartIds.id1,
     userId: DEFAULT_USER_ID,
-    products: productsInCart.products1
+    products: productsInCart.products1,
+    shippingMethod: ShippingMethod.COURIER
 }
 
 export const cart2: Cart = {
     cartId: cartIds.id2,
     userId: DEFAULT_USER_ID,
-    products: productsInCart.products2
+    products: productsInCart.products2,
+    shippingMethod: ShippingMethod.CASH_ON_DELIVERY
 }
 
 export const emptyCart: Cart = {
     cartId: cartIds.id3,
     userId: DEFAULT_USER_ID,
-    products: productsInCart.products3
+    products: productsInCart.products3,
+    shippingMethod: ShippingMethod.PICKUP_IN_PERSON
+}
+
+export const newShippingBody1: ShippingBody = {
+    shippingMethod: ShippingMethod.PARCEL_LOCKER
 }
 
 export const insertOne = (cart: Cart) =>

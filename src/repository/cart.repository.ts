@@ -1,5 +1,5 @@
 import {Mongo} from "../db/mongo";
-import {Cart, Product} from "../cart/cart.interfaces";
+import {Cart, Product, ShippingMethod} from "../cart/cart.interfaces";
 
 export class CartRepository {
     public static insertOne = (cart: Cart) =>
@@ -19,4 +19,7 @@ export class CartRepository {
 
     public static changeQuantity = (userId: string, productId: string, newQuantity: number) =>
         Mongo.cart().updateOne({userId, "products.productId": productId}, {$set: {"products.$.quantity": newQuantity}})
+
+    public static changeShipping = (userId: string, shippingMethod: ShippingMethod) =>
+        Mongo.cart().updateOne({userId}, {$set: {shippingMethod}})
 }

@@ -1,5 +1,5 @@
 import {CartRepository} from "../repository/cart.repository";
-import {Product, QuantityBody} from "./cart.interfaces";
+import {Product, QuantityBody, ShippingBody} from "./cart.interfaces";
 
 export class CartService {
     getCart = async (userId: string) =>
@@ -16,6 +16,10 @@ export class CartService {
 
     changeQuantity = async (userId: string, productId: string, body: QuantityBody) => {
         await CartRepository.changeQuantity(userId, productId, body.newQuantity)
+    }
+
+    changeShipping = async (userId: string, body: ShippingBody) => {
+        await CartRepository.changeShipping(userId, body.shippingMethod)
     }
 
     mapCart = cart => (
