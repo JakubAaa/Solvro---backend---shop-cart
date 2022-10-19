@@ -28,6 +28,6 @@ describe(`PUT ${CART_PATH}${SHIPPING_PATH}`, () => {
 
         expect(changeShippingResponse.status).toBe(200)
 
-        expect(cart!.shippingMethod).toBe(newShippingBody1.shippingMethod);
+        expect(cart!.shippingCost).toBe(newShippingBody1.shippingMethod);
     })
 })

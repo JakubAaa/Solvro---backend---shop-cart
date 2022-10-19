@@ -1,10 +1,23 @@
 import {CartRepository} from "../repository/cart.repository";
-import {DiscountCodeBody, Product, QuantityBody, ShippingBody} from "./cart.interfaces";
+import {DiscountCodeBody, Product, QuantityBody, ShippingBody, DiscountCodeType} from "./cart.interfaces";
 import codes from '../resource.i18n/discountCodes.json'
 
 export class CartService {
-    getCart = async (userId: string) =>
-        CartRepository.findUserCart(userId).then(cart => this.mapCart(cart))
+    getCart = async (userId: string) => {
+        const cart = await CartRepository.findUserCart(userId)
+
+        let totalValue = this.calculateTotalValue(cart!.products);
+        let discountValue = await this.calculateDiscount(cart!.discountCode, totalValue);
+        let priceAfterDiscount = totalValue - discountValue;
+
+        return {
+            products: cart!.products,
+            shippingMethod: cart!.shippingCost,
+            totalValue: totalValue,
+            discountValue: discountValue,
+            priceAfterDiscount: priceAfterDiscount > 0 ? priceAfterDiscount : 0
+        }
+    }
 
     addProduct = async (userId: string, product: Product) => {
         await CartRepository.addProduct(userId, product)
@@ -27,10 +40,20 @@ export class CartService {
             await CartRepository.setDiscountCode(userId, body.code)
     }
 
-    mapCart = cart => (
-        {
-            products: cart.products,
-            totalValue: cart.totalValue
+    private calculateTotalValue = (products: Product[]) => {
+        let totalValue = 0;
+        products.forEach(p => totalValue += p.quantity * p.price)
+        return totalValue;
+    }
+
+    private calculateDiscount = async (code: string | undefined, totalValue: number) => {
+        if (code) {
+            const discountCode = await codes.filter(c => c.code === code)[0]
+            if (discountCode.type === DiscountCodeType.AMOUNT)
+                return Number(discountCode.value);
+            if (discountCode.type === DiscountCodeType.PERCENT)
+                return Number(discountCode.value) * 0.01 * totalValue;
         }
-    )
+        return 0;
+    }
 }

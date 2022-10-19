@@ -3,7 +3,7 @@ export interface Cart {
     userId: string,
     products: Product[]
     discountCode?: string,
-    shippingMethod: ShippingMethod
+    shippingCost: ShippingMethod
 }
 
 export interface Product {
@@ -12,9 +12,9 @@ export interface Product {
     price: number
 }
 
-enum DiscountCodeType {
-    PERCENT,
-    AMOUNT
+export enum DiscountCodeType {
+    PERCENT = 'PERCENT',
+    AMOUNT = 'AMOUNT'
 }
 
 export enum ShippingMethod {
