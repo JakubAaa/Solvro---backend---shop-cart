@@ -7,6 +7,7 @@ import {cartController} from "../tests.utils/controllers";
 import {product1, product2} from "../tests.utils/insert.product";
 import {cart1, insertOne} from "../tests.utils/insert.cart";
 import {CartRepository} from "../../src/repository/cart.repository";
+import {DEFAULT_USER_ID} from "../../src/auth/auth.request";
 
 describe(`DELETE ${CART_PATH}${PRODUCT_PATH}`, () => {
     beforeAll(async () => {
@@ -20,7 +21,7 @@ describe(`DELETE ${CART_PATH}${PRODUCT_PATH}`, () => {
     })
 
     it('should delete product from cart', async () => {
-        const deleteProductResponse = await supertest(appMock(cartController))
+        const deleteProductResponse = await supertest(appMock(cartController, DEFAULT_USER_ID))
             .delete(`${CART_PATH}${PRODUCT_PATH}/${product1.productId}`)
             .send()
 

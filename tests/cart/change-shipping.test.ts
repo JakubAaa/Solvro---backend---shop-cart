@@ -7,6 +7,7 @@ import {cartController} from "../tests.utils/controllers";
 import {newQuantityBody1} from "../tests.utils/insert.product";
 import {CartRepository} from "../../src/repository/cart.repository";
 import supertest from "supertest";
+import {DEFAULT_USER_ID} from "../../src/auth/auth.request";
 
 describe(`PUT ${CART_PATH}${SHIPPING_PATH}`, () => {
     beforeAll(async () => {
@@ -20,7 +21,7 @@ describe(`PUT ${CART_PATH}${SHIPPING_PATH}`, () => {
     })
 
     it('should change shipping method for user cart', async () => {
-        const changeShippingResponse = await supertest(appMock(cartController))
+        const changeShippingResponse = await supertest(appMock(cartController, DEFAULT_USER_ID))
             .put(`${CART_PATH}${SHIPPING_PATH}`)
             .send(newShippingBody1)
 

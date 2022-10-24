@@ -12,17 +12,44 @@ export class CartRepository {
         Mongo.cart().findOne({userId})
 
     public static addProduct = (userId: string, product: Product) =>
-        Mongo.cart().updateOne({userId}, {$push: {products: product}})
+        Mongo.cart().updateOne({userId}, {$push: {products: product}}).then(r => r.modifiedCount)
 
     public static deleteProduct = (userId: string, productId: string) =>
-        Mongo.cart().updateOne({userId}, {$pull: {products: {productId}}})
+        Mongo.cart().updateOne({userId}, {$pull: {products: {productId}}}).then(r => r.modifiedCount)
 
     public static changeQuantity = (userId: string, productId: string, newQuantity: number) =>
-        Mongo.cart().updateOne({userId, "products.productId": productId}, {$set: {"products.$.quantity": newQuantity}})
+        Mongo.cart().updateOne({
+            userId,
+            "products.productId": productId
+        }, {$set: {"products.$.quantity": newQuantity}}).then(r => r.modifiedCount)
 
     public static changeShipping = (userId: string, shippingCost: ShippingMethod) =>
-        Mongo.cart().updateOne({userId}, {$set: {shippingCost}})
+        Mongo.cart().updateOne({userId}, {$set: {shippingCost}}).then(r => r.modifiedCount)
 
     public static setDiscountCode = (userId: string, code: string) =>
-        Mongo.cart().updateOne({userId}, {$set: {discountCode: code}})
+        Mongo.cart().updateOne({userId}, {$set: {discountCode: code}}).then(r => r.modifiedCount)
+
+    public static setCartSharingIdNumberOfUsesAndTTL = (userId: string, sharingCartId: string, TTL: Date, numberOfUses: number) =>
+        Mongo.cart().updateOne({userId}, {
+            $set: {
+                sharingCartId,
+                sharingLinkTTL: TTL,
+                sharingLinkPossibleNumberOfUses: numberOfUses
+            }
+        }).then(r => r.modifiedCount)
+
+    public static findCartBySharingIdAndTTLAndDecrementNumberOfUses = (sharingCartId: string) =>
+        Mongo.cart().findOneAndUpdate({
+                sharingCartId,
+                sharingLinkPossibleNumberOfUses: {$gt: 0},
+                sharingLinkTTL: {$gte: new Date(Date.now())}
+            }, {
+                $inc: {sharingLinkPossibleNumberOfUses: -1}
+            }, {
+                returnDocument: "after"
+            }
+        ).then(r => r.value)
+
+    public static updateProductsAndDiscountCodeAndShippingCost = (userId: string, products: Product[], discountCode: string | undefined, shippingCost: ShippingMethod) =>
+        Mongo.cart().updateOne({userId}, {$set: {products, discountCode, shippingCost}}).then(r => r.modifiedCount)
 }

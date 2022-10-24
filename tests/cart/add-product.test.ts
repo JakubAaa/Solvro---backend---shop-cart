@@ -7,6 +7,7 @@ import {cartController} from "../tests.utils/controllers";
 import {product1, product2} from "../tests.utils/insert.product";
 import {cart1, emptyCart, insertOne} from "../tests.utils/insert.cart";
 import {CartRepository} from "../../src/repository/cart.repository";
+import {DEFAULT_USER_ID} from "../../src/auth/auth.request";
 
 describe(`POST ${CART_PATH}${PRODUCT_PATH}`, () => {
     beforeAll(async () => {
@@ -24,7 +25,7 @@ describe(`POST ${CART_PATH}${PRODUCT_PATH}`, () => {
     it('should add product to empty cart', async () => {
         await insertOne(emptyCart)
 
-        const addProductResponse = await supertest(appMock(cartController))
+        const addProductResponse = await supertest(appMock(cartController, DEFAULT_USER_ID))
             .post(`${CART_PATH}${PRODUCT_PATH}`)
             .send(product1)
 
@@ -38,7 +39,7 @@ describe(`POST ${CART_PATH}${PRODUCT_PATH}`, () => {
     it('should add product to non-empty cart', async () => {
         await insertOne(cart1)
 
-        const addProductResponse = await supertest(appMock(cartController))
+        const addProductResponse = await supertest(appMock(cartController, DEFAULT_USER_ID))
             .post(`${CART_PATH}${PRODUCT_PATH}`)
             .send(product2)
 

@@ -6,6 +6,7 @@ import {appMock} from "../mocks/app.mock";
 import {cartController} from "../tests.utils/controllers";
 import {CartRepository} from "../../src/repository/cart.repository";
 import supertest from "supertest";
+import {DEFAULT_USER_ID} from "../../src/auth/auth.request";
 
 describe(`POST ${CART_PATH}${DISCOUNT_CODE_PATH}`, () => {
     beforeAll(async () => {
@@ -25,7 +26,7 @@ describe(`POST ${CART_PATH}${DISCOUNT_CODE_PATH}`, () => {
     })
 
     it('should set discount code in cart', async () => {
-        const setDiscountCodeResponse = await supertest(appMock(cartController))
+        const setDiscountCodeResponse = await supertest(appMock(cartController, DEFAULT_USER_ID))
             .post(`${CART_PATH}${DISCOUNT_CODE_PATH}`)
             .send(discountCodeBody1)
 
@@ -37,7 +38,7 @@ describe(`POST ${CART_PATH}${DISCOUNT_CODE_PATH}`, () => {
     })
 
     it('should not set discount code - code does not exist', async () => {
-        const setDiscountCodeResponse = await supertest(appMock(cartController))
+        const setDiscountCodeResponse = await supertest(appMock(cartController, DEFAULT_USER_ID))
             .post(`${CART_PATH}${DISCOUNT_CODE_PATH}`)
             .send({code: 'non-existing code'})
 

@@ -2,9 +2,12 @@ import {CART_PATH, PRODUCT_PATH} from "../../src/cart/cart.controller";
 import {Mongo} from "../../src/db/mongo";
 import {appConfig} from "../../src/utils/config";
 import supertest from "supertest"
-import {appMock} from "../mocks/app.mock";
+import {appMock, DIFFERENT_USER_ID} from "../mocks/app.mock";
 import {cartController} from "../tests.utils/controllers";
-import {cart1, cart2, cart3, cart4, insertOne} from "../tests.utils/insert.cart";
+import {cart1, cart2, cart3, cart4, insertOne, otherUserCart} from "../tests.utils/insert.cart";
+import {DEFAULT_USER_ID} from "../../src/auth/auth.request";
+import {ErrorDatas} from "../../src/error/error.datas";
+import {ErrorCodes} from "../../src/error/error.codes";
 
 describe(`GET ${CART_PATH}${PRODUCT_PATH}`, () => {
     beforeAll(async () => {
@@ -22,7 +25,7 @@ describe(`GET ${CART_PATH}${PRODUCT_PATH}`, () => {
     it('should return a cart without any discounts', async () => {
         await insertOne(cart1)
 
-        const getCartResponse = await supertest(appMock(cartController))
+        const getCartResponse = await supertest(appMock(cartController, DEFAULT_USER_ID))
             .get(`${CART_PATH}${PRODUCT_PATH}`)
             .send()
 
@@ -41,7 +44,7 @@ describe(`GET ${CART_PATH}${PRODUCT_PATH}`, () => {
     it('should return a cart with discount code - percent', async () => {
         await insertOne(cart2)
 
-        const getCartResponse = await supertest(appMock(cartController))
+        const getCartResponse = await supertest(appMock(cartController, DEFAULT_USER_ID))
             .get(`${CART_PATH}${PRODUCT_PATH}`)
             .send()
 
@@ -61,7 +64,7 @@ describe(`GET ${CART_PATH}${PRODUCT_PATH}`, () => {
     it('should return a cart with discount code - amount < totalValue', async () => {
         await insertOne(cart3)
 
-        const getCartResponse = await supertest(appMock(cartController))
+        const getCartResponse = await supertest(appMock(cartController, DEFAULT_USER_ID))
             .get(`${CART_PATH}${PRODUCT_PATH}`)
             .send()
 
@@ -81,7 +84,7 @@ describe(`GET ${CART_PATH}${PRODUCT_PATH}`, () => {
     it('should return a cart with discount code - amount > totalValue', async () => {
         await insertOne(cart4)
 
-        const getCartResponse = await supertest(appMock(cartController))
+        const getCartResponse = await supertest(appMock(cartController, DEFAULT_USER_ID))
             .get(`${CART_PATH}${PRODUCT_PATH}`)
             .send()
 
@@ -96,5 +99,18 @@ describe(`GET ${CART_PATH}${PRODUCT_PATH}`, () => {
         expect(getCartResponse.body.totalValue).toBe(totalValue);
         expect(getCartResponse.body.discountValue).toBe(discountValue);
         expect(getCartResponse.body.priceAfterDiscount).toBe(0);
+    })
+
+    it('should throw error 404 - cart does not exist', async () => {
+        await insertOne(otherUserCart)
+
+        const getCartResponse = await supertest(appMock(cartController, DEFAULT_USER_ID))
+            .get(`${CART_PATH}${PRODUCT_PATH}`)
+            .send()
+
+        expect(getCartResponse.status).toBe(404)
+
+        expect(getCartResponse.body.data).toStrictEqual(ErrorDatas.RESOURCE_NOT_FOUND)
+        expect(getCartResponse.body.code).toStrictEqual(ErrorCodes.RESOURCE_NOT_FOUND)
     })
 })

@@ -3,7 +3,10 @@ export interface Cart {
     userId: string,
     products: Product[]
     discountCode?: string,
-    shippingCost: ShippingMethod
+    shippingCost: ShippingMethod,
+    sharingCartId?: string,
+    sharingLinkTTL?: Date,
+    sharingLinkPossibleNumberOfUses?: number
 }
 
 export interface Product {

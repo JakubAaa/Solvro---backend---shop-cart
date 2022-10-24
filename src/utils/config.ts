@@ -10,5 +10,6 @@ const required = (key: string, variable?: string) => {
 
 export const appConfig = {
     PORT: process.env.PORT || 3000,
-    MONGO_URL: required("MONGO_URL", process.env.MONGO_URL)
+    MONGO_URL: required("MONGO_URL", process.env.MONGO_URL),
+    URL_DOMAIN: required("URL_DOMAIN", process.env.URL_DOMAIN)
 }
