@@ -60,18 +60,17 @@ export class CartService {
     importCartByLink = async (userId: string, sharingCartId: string) => {
         const cartToShare = await CartRepository.findCartBySharingIdAndTTLAndDecrementNumberOfUses(sharingCartId);
         if (!cartToShare)
-            throw new ResourceNotFound()
+            throw new ResourceNotFound();
 
         if (cartToShare.userId === userId)
             return;
-
 
         await CartRepository.updateProductsAndDiscountCodeAndShippingCost(
             userId,
             cartToShare.products,
             cartToShare.discountCode,
             cartToShare.shippingCost
-        )
+        );
     }
 
     private calculateTotalValue = (products: Product[]) => {
