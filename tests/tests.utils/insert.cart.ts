@@ -3,6 +3,8 @@ import {DEFAULT_USER_ID} from "../../src/auth/auth.request";
 import {product1, product2, product3} from "./insert.product";
 import {CartRepository} from "../../src/repository/cart.repository";
 import {DIFFERENT_USER_ID} from "../mocks/app.mock";
+import moment from "moment";
+import {TWO_HOURS} from "../../src/cart/cart.service";
 
 export const cartIds = {
     id1: 'cart1',
@@ -91,7 +93,7 @@ export const cartToShare: Cart = {
     products: productsInCart.products4,
     shippingCost: ShippingMethod.PARCEL_LOCKER,
     sharingLinkPossibleNumberOfUses: 1000000,
-    sharingLinkTTL: new Date(3000, 1, 1),
+    sharingLinkTTL: new Date(moment.now() + TWO_HOURS),
     sharingCartId: sharingCartIds.id1
 }
 
@@ -101,7 +103,7 @@ export const cartWithOutOfDateTTL: Cart = {
     products: productsInCart.products2,
     shippingCost: ShippingMethod.PARCEL_LOCKER,
     sharingLinkPossibleNumberOfUses: 1000000,
-    sharingLinkTTL: new Date(1999, 1, 1),
+    sharingLinkTTL: new Date(moment.now() - TWO_HOURS),
     sharingCartId: sharingCartIds.id2
 }
 
@@ -111,7 +113,7 @@ export const cartWithoutMoreNumberOfUses: Cart = {
     products: productsInCart.products1,
     shippingCost: ShippingMethod.PARCEL_LOCKER,
     sharingLinkPossibleNumberOfUses: 0,
-    sharingLinkTTL: new Date(3000, 1, 1),
+    sharingLinkTTL: new Date(moment.now() + TWO_HOURS),
     sharingCartId: sharingCartIds.id3
 }
 
