@@ -24,7 +24,7 @@ export class CartController implements Controller {
             this.addProduct(req.user.id, req.body).then(() => res.sendStatus(201)))
 
         this.router.delete(`${CART_PATH}${PRODUCT_PATH}/:productId`, (req: AuthRequest, res: Response) =>
-            this.deleteProduct(req.user.id, req.params.productId).then(() => res.sendStatus(200)))
+            this.deleteProduct(req.user.id, req.params.productId).then(() => res.sendStatus(204)))
 
         this.router.put(`${CART_PATH}${PRODUCT_PATH}/:productId${QUANTITY_PATH}`, validate(quantityBodySchema), (req: AuthRequest, res: Response) =>
             this.changeQuantity(req.user.id, req.params.productId, req.body).then(() => res.sendStatus(200)))

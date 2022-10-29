@@ -6,7 +6,7 @@ export interface Cart {
     shippingCost: ShippingMethod,
     sharingCartId?: string,
     sharingLinkTTL?: Date,
-    sharingLinkPossibleNumberOfUses?: number
+    leftLinkUsages?: number
 }
 
 export interface Product {

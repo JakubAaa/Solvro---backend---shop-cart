@@ -4,7 +4,6 @@ import {appConfig} from "../../src/utils/config";
 import {cart1, insertOne, newShippingBody1} from "../tests.utils/insert.cart";
 import {appMock} from "../mocks/app.mock";
 import {cartController} from "../tests.utils/controllers";
-import {newQuantityBody1} from "../tests.utils/insert.product";
 import {CartRepository} from "../../src/repository/cart.repository";
 import supertest from "supertest";
 import {DEFAULT_USER_ID} from "../../src/auth/auth.request";
@@ -28,7 +27,6 @@ describe(`PUT ${CART_PATH}${SHIPPING_PATH}`, () => {
         const cart = await CartRepository.findOne(cart1.cartId)
 
         expect(changeShippingResponse.status).toBe(200)
-
         expect(cart!.shippingCost).toBe(newShippingBody1.shippingMethod);
     })
 })

@@ -12,6 +12,7 @@ import {ResourceNotFound} from "../error/error.module";
 import {v4 as uuid} from "uuid";
 import {appConfig} from "../utils/config";
 import {CART_PATH, SHARE_PATH} from "./cart.controller";
+import moment from "moment";
 
 export const TWO_HOURS = 2 * 60 * 60 * 1000;
 export const DEFAULT_NUMBER_OF_USES = 5;
@@ -23,9 +24,15 @@ export class CartService {
             throw new ResourceNotFound()
 
         const totalValue = this.calculateTotalValue(cart.products);
-        let discountValue = await this.calculateDiscount(cart.discountCode, totalValue);
-        let priceAfterDiscount = totalValue - discountValue;
 
+        if (!cart.discountCode)
+            return this.mapCart(cart, totalValue, 0, totalValue);
+
+        const discountValue = await this.calculateDiscount(cart.discountCode, totalValue);
+        if (!discountValue)
+            return this.mapCart(cart, totalValue, 0, totalValue);
+
+        const priceAfterDiscount = totalValue - discountValue;
         return this.mapCart(cart, totalValue, discountValue, priceAfterDiscount)
     }
 
@@ -46,26 +53,25 @@ export class CartService {
     }
 
     setDiscountCode = async (userId: string, body: DiscountCodeBody) => {
-        if (this.discountCodeExist(body.code))
-            await CartRepository.setDiscountCode(userId, body.code)
+        if (!this.discountCodeExist(body.code))
+            throw new ResourceNotFound()
+        await CartRepository.setDiscountCode(userId, body.code)
     }
 
     generateShareLink = async (userId: string) => {
         const sharingCartId = uuid();
-        const TTL = new Date(Date.now() + TWO_HOURS);
-        await CartRepository.setCartSharingIdNumberOfUsesAndTTL(userId, sharingCartId, TTL, DEFAULT_NUMBER_OF_USES);
-        return `${appConfig.URL_DOMAIN}${appConfig.PORT}${CART_PATH}${SHARE_PATH}/${sharingCartId}`
+        const TTL = new Date(moment.now() + TWO_HOURS);
+        await CartRepository.setSharingMetadata(userId, sharingCartId, TTL, DEFAULT_NUMBER_OF_USES);
+        return this.provideShareLink(sharingCartId)
     }
 
     importCartByLink = async (userId: string, sharingCartId: string) => {
-        const cartToShare = await CartRepository.findCartBySharingIdAndTTLAndDecrementNumberOfUses(sharingCartId);
+        const cartToShare = await CartRepository.getByLink(sharingCartId);
         if (!cartToShare)
             throw new ResourceNotFound();
 
-        if (cartToShare.userId === userId)
-            return;
-
-        await CartRepository.updateProductsAndDiscountCodeAndShippingCost(
+        await CartRepository.decrementUsages(sharingCartId);
+        await CartRepository.updateCart(
             userId,
             cartToShare.products,
             cartToShare.discountCode,
@@ -79,28 +85,37 @@ export class CartService {
         return totalValue;
     }
 
-    private calculateDiscount = async (code: string | undefined, totalValue: number) => {
-        if (code) {
-            const discountCode = await discountCodesList.filter(c => c.code === code)[0]
-            if (discountCode.type === DiscountCodeType.AMOUNT)
-                return Number(discountCode.value);
-            if (discountCode.type === DiscountCodeType.PERCENT)
-                return Number(discountCode.value) * 0.01 * totalValue;
+    private calculateDiscount = async (code: string, totalValue: number) => {
+        const discountCode = await discountCodesList.find(c => c.code === code);
+        if (!discountCode)
+            return 0;
+
+        switch (discountCode.type) {
+            case DiscountCodeType.AMOUNT:
+                return this.calculateDiscountAMOUNT(discountCode.value);
+            case DiscountCodeType.PERCENT:
+                return this.calculateDiscountPERCENT(discountCode.value, totalValue);
         }
-        return 0;
     }
 
     private discountCodeExist = (code: string) =>
-        discountCodesList.filter(c => c.code === code).length > 0
+        discountCodesList.find(c => c.code === code)
 
     private mapCart = (cart: Cart, totalValue: number, discountValue: number, priceAfterDiscount: number) =>
-        (
-            {
-                products: cart.products,
-                shippingMethod: cart.shippingCost,
-                totalValue: totalValue,
-                discountValue: discountValue,
-                priceAfterDiscount: priceAfterDiscount > 0 ? priceAfterDiscount : 0
-            }
-        )
+        ({
+            products: cart.products,
+            shippingMethod: cart.shippingCost,
+            totalValue: totalValue,
+            discountValue: discountValue,
+            priceAfterDiscount: priceAfterDiscount > 0 ? priceAfterDiscount : 0
+        })
+
+    private provideShareLink = (sharingCartId: string) =>
+        `${appConfig.URL_DOMAIN}${appConfig.PORT}${CART_PATH}${SHARE_PATH}/${sharingCartId}`
+
+    private calculateDiscountAMOUNT = (codeValue: string) =>
+        parseInt(codeValue);
+
+    private calculateDiscountPERCENT = (codeValue: string, totalValue: number) =>
+        parseInt(codeValue) * 0.01 * totalValue;
 }

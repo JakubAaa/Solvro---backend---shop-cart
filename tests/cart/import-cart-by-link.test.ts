@@ -46,7 +46,7 @@ describe(`POST ${CART_PATH}${SHARE_PATH}/:sharingCartId`, () => {
         expect(importedCart!.shippingCost).toBe(cartToShare.shippingCost)
         expect(importedCart!.discountCode).toBe(cartToShare.discountCode)
 
-        expect(cartToImport!.sharingLinkPossibleNumberOfUses).toBe(cartToShare.sharingLinkPossibleNumberOfUses! - 1)
+        expect(cartToImport!.leftLinkUsages).toBe(cartToShare.leftLinkUsages! - 1)
     })
 
     it('should not import cart - user used his own link to his own cart', async () => {
@@ -91,7 +91,7 @@ describe(`POST ${CART_PATH}${SHARE_PATH}/:sharingCartId`, () => {
         expect(importCartResponse.body.code).toStrictEqual(ErrorCodes.RESOURCE_NOT_FOUND)
     })
 
-    it('should throw error 404 - link has not more number of uses', async () => {
+    it('should throw error 404 - link has no more number of uses', async () => {
         await insertOne(cartWithoutMoreNumberOfUses)
 
         const importCartResponse = await supertest(appMock(cartController, DIFFERENT_USER_ID))

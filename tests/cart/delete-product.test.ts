@@ -27,8 +27,7 @@ describe(`DELETE ${CART_PATH}${PRODUCT_PATH}`, () => {
 
         const cart = await CartRepository.findOne(cart1.cartId)
 
-        expect(deleteProductResponse.status).toBe(200)
-
+        expect(deleteProductResponse.status).toBe(204)
         expect(cart!.products).toStrictEqual([product2]);
     })
 })

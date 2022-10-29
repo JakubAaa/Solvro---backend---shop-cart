@@ -92,7 +92,7 @@ export const cartToShare: Cart = {
     userId: DEFAULT_USER_ID,
     products: productsInCart.products4,
     shippingCost: ShippingMethod.PARCEL_LOCKER,
-    sharingLinkPossibleNumberOfUses: 1000000,
+    leftLinkUsages: 1000000,
     sharingLinkTTL: new Date(moment.now() + TWO_HOURS),
     sharingCartId: sharingCartIds.id1
 }
@@ -102,7 +102,7 @@ export const cartWithOutOfDateTTL: Cart = {
     userId: DEFAULT_USER_ID,
     products: productsInCart.products2,
     shippingCost: ShippingMethod.PARCEL_LOCKER,
-    sharingLinkPossibleNumberOfUses: 1000000,
+    leftLinkUsages: 1000000,
     sharingLinkTTL: new Date(moment.now() - TWO_HOURS),
     sharingCartId: sharingCartIds.id2
 }
@@ -112,7 +112,7 @@ export const cartWithoutMoreNumberOfUses: Cart = {
     userId: DEFAULT_USER_ID,
     products: productsInCart.products1,
     shippingCost: ShippingMethod.PARCEL_LOCKER,
-    sharingLinkPossibleNumberOfUses: 0,
+    leftLinkUsages: 0,
     sharingLinkTTL: new Date(moment.now() + TWO_HOURS),
     sharingCartId: sharingCartIds.id3
 }

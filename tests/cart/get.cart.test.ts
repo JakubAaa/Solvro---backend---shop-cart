@@ -2,7 +2,7 @@ import {CART_PATH, PRODUCT_PATH} from "../../src/cart/cart.controller";
 import {Mongo} from "../../src/db/mongo";
 import {appConfig} from "../../src/utils/config";
 import supertest from "supertest"
-import {appMock, DIFFERENT_USER_ID} from "../mocks/app.mock";
+import {appMock} from "../mocks/app.mock";
 import {cartController} from "../tests.utils/controllers";
 import {cart1, cart2, cart3, cart4, insertOne, otherUserCart} from "../tests.utils/insert.cart";
 import {DEFAULT_USER_ID} from "../../src/auth/auth.request";

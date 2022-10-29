@@ -1,4 +1,4 @@
-import {CART_PATH, PRODUCT_PATH, SHARE_PATH} from "../../src/cart/cart.controller";
+import {CART_PATH, SHARE_PATH} from "../../src/cart/cart.controller";
 import {Mongo} from "../../src/db/mongo";
 import {appConfig} from "../../src/utils/config";
 import supertest from "supertest"
@@ -35,6 +35,6 @@ describe(`POST ${CART_PATH}${SHARE_PATH}`, () => {
         expect(cart!.sharingCartId).toBeDefined();
         expect(cart!.sharingLinkTTL).toBeDefined();
         expect(cart!.sharingLinkTTL!.getTime()).toBe(Date.now() + TWO_HOURS)
-        expect(cart!.sharingLinkPossibleNumberOfUses).toBe(DEFAULT_NUMBER_OF_USES);
+        expect(cart!.leftLinkUsages).toBe(DEFAULT_NUMBER_OF_USES);
     })
 })

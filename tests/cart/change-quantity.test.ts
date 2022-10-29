@@ -28,7 +28,6 @@ describe(`PUT ${CART_PATH}${PRODUCT_PATH}/:productId${QUANTITY_PATH}`, () => {
         const cart = await CartRepository.findOne(cart1.cartId)
 
         expect(changeQuantityResponse.status).toBe(200)
-
         expect(cart!.products[0].quantity).toStrictEqual(newQuantityBody1.newQuantity);
     })
 })
