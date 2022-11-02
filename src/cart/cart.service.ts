@@ -14,7 +14,6 @@ import {appConfig} from "../utils/config";
 import {CART_PATH, SHARE_PATH} from "./cart.controller";
 import moment from "moment";
 
-export const TWO_HOURS = 2 * 60 * 60 * 1000;
 export const DEFAULT_NUMBER_OF_USES = 5;
 
 export class CartService {
@@ -28,10 +27,7 @@ export class CartService {
         if (!cart.discountCode)
             return this.mapCart(cart, totalValue, 0, totalValue);
 
-        const discountValue = await this.calculateDiscount(cart.discountCode, totalValue);
-        if (!discountValue)
-            return this.mapCart(cart, totalValue, 0, totalValue);
-
+        const discountValue = this.calculateDiscount(cart.discountCode, totalValue);
         const priceAfterDiscount = totalValue - discountValue;
         return this.mapCart(cart, totalValue, discountValue, priceAfterDiscount)
     }
@@ -60,7 +56,7 @@ export class CartService {
 
     generateShareLink = async (userId: string) => {
         const sharingCartId = uuid();
-        const TTL = new Date(moment.now() + TWO_HOURS);
+        const TTL = moment().add(2, "hour").toDate();
         await CartRepository.setSharingMetadata(userId, sharingCartId, TTL, DEFAULT_NUMBER_OF_USES);
         return this.provideShareLink(sharingCartId)
     }
@@ -85,16 +81,16 @@ export class CartService {
         return totalValue;
     }
 
-    private calculateDiscount = async (code: string, totalValue: number) => {
-        const discountCode = await discountCodesList.find(c => c.code === code);
-        if (!discountCode)
-            return 0;
+    private calculateDiscount = (code: string, totalValue: number) => {
+        const discountCode = discountCodesList.find(c => c.code === code);
 
-        switch (discountCode.type) {
+        switch (discountCode?.type) {
             case DiscountCodeType.AMOUNT:
                 return this.calculateDiscountAMOUNT(discountCode.value);
             case DiscountCodeType.PERCENT:
                 return this.calculateDiscountPERCENT(discountCode.value, totalValue);
+            default:
+                return 0;
         }
     }
 
@@ -111,7 +107,7 @@ export class CartService {
         })
 
     private provideShareLink = (sharingCartId: string) =>
-        `${appConfig.URL_DOMAIN}${appConfig.PORT}${CART_PATH}${SHARE_PATH}/${sharingCartId}`
+        `${appConfig.SHARE_LINK_DOMAIN}${CART_PATH}${SHARE_PATH}/${sharingCartId}`
 
     private calculateDiscountAMOUNT = (codeValue: string) =>
         parseInt(codeValue);
