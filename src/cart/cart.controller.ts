@@ -10,7 +10,7 @@ export const CART_PATH = '/cart'
 export const PRODUCT_PATH = '/product'
 export const QUANTITY_PATH = '/quantity'
 export const SHIPPING_PATH = '/shipping'
-export const DISCOUNT_CODE_PATH = '/shipping'
+export const DISCOUNT_CODE_PATH = '/discount-code'
 export const SHARE_PATH = '/share'
 
 export class CartController implements Controller {

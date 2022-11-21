@@ -8,10 +8,9 @@ export class Mongo {
   private static client: MongoClient
 
   public static connect = (url: string): Promise<Db> =>
-    MongoClient.connect(url, { ignoreUndefined: true })
+    MongoClient.connect(url)
       .then(c => this.client = c)
       .then(c => this.mongo = c.db())
-      .then(db => db)
       .then(db => db)
 
   public static close = () => this.client.close()

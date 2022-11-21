@@ -44,7 +44,6 @@ describe(`POST ${CART_PATH}${SHARE_PATH}/:sharingCartId`, () => {
 
     expect(importedCart!.products).toStrictEqual(cartToShare.products)
     expect(importedCart!.shippingCost).toBe(cartToShare.shippingCost)
-    expect(importedCart!.discountCode).toBe(cartToShare.discountCode)
 
     expect(cartToImport!.leftLinkUsages).toBe(cartToShare.leftLinkUsages! - 1)
   })
@@ -62,7 +61,6 @@ describe(`POST ${CART_PATH}${SHARE_PATH}/:sharingCartId`, () => {
 
     expect(cart!.products).toStrictEqual(cartToShare.products)
     expect(cart!.shippingCost).toBe(cartToShare.shippingCost)
-    expect(cart!.discountCode).toBe(cartToShare.discountCode)
   })
 
   it('should throw error 404 - cart does not exist', async () => {
