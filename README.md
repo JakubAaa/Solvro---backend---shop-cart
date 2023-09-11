@@ -2,7 +2,7 @@
 
 ## Overview
 
-Welcome to the Shopping Cart Server-side App project! This application is designed to manage a user's shopping cart with
+Welcome to the Shopping Cart Server-side project! This application is designed to manage a user's shopping cart with
 various features to enhance their shopping experience. Users can effortlessly add products to their cart, remove items
 as needed, and view their cart's contents, making shopping efficient and user-friendly.
 
